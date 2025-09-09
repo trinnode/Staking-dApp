@@ -94,3 +94,14 @@ export function truncateDecimals(value, decimals = 4) {
   if (parts.length === 1) return value;
   return `${parts[0]}.${parts[1].substring(0, decimals)}`;
 }
+
+/**
+ * Format a timestamp for display
+ * @param {number} timestamp - Unix timestamp in milliseconds
+ * @returns {string} Formatted date and time
+ */
+export function formatTimestamp(timestamp) {
+  if (!timestamp) return "";
+  const date = new Date(timestamp);
+  return date.toLocaleString();
+}
