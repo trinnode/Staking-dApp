@@ -14,7 +14,7 @@ import "@rainbow-me/rainbowkit/styles.css";
 
 // Create Wagmi config
 const config = getDefaultConfig({
-  appName: "Staking dApp",
+  appName: "Stake or growBroke",
   projectId: "YOUR_PROJECT_ID", // Get from WalletConnect Cloud
   chains: [sepolia],
   ssr: false,
