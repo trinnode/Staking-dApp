@@ -47,9 +47,11 @@ const ProtocolStatsCard = () => {
   }
 
   // Calculate total rewards including claimed rewards
-  const totalRewardsWithClaimed = stats?.totalRewards
-    ? Number(formatTokenAmount(stats.totalRewards, 18, 2)) + totalRewardsClaimed
-    : totalRewardsClaimed;
+  const totalRewardsNumber = stats?.totalRewards
+    ? Number(formatTokenAmount(stats.totalRewards, 18, 4))
+    : 0;
+
+  const totalRewardsWithClaimed = totalRewardsNumber + totalRewardsClaimed;
 
   // Format numbers for better display
   const totalStakedNumber = stats?.totalStaked
@@ -161,8 +163,8 @@ const ProtocolStatsCard = () => {
               <div className="text-sm font-medium text-gray-500 mb-1">
                 Lock Period
               </div>
-              <div className="text-lg font-bold text-gray-900">90</div>
-              <div className="text-xs text-gray-500">seconds</div>
+              <div className="text-lg font-bold text-gray-900">3</div>
+              <div className="text-xs text-gray-500">minutes</div>
             </div>
           </div>
 

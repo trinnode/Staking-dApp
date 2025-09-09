@@ -48,9 +48,9 @@ export function useUserStakingData() {
       }
     : null;
 
-  // Calculate canWithdraw based on lock duration (90 seconds)
+  // Calculate canWithdraw based on lock duration (3 minutes = 180 seconds)
   const currentTime = Math.floor(Date.now() / 1000);
-  const lockDuration = 90; // 90 seconds
+  const lockDuration = 180; // 3 minutes
   const canWithdraw = stakingData
     ? currentTime >= stakingData.lastStakeTimestamp + lockDuration
     : false;

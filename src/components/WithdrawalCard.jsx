@@ -62,7 +62,6 @@ const WithdrawalCard = () => {
 
       toast.success("Withdrawal transaction submitted");
       setAmount("");
-      setAmount("");
     } catch (error) {
       console.error("Withdrawal error:", error);
       toast.error("Withdrawal failed");
@@ -183,7 +182,7 @@ const WithdrawalCard = () => {
           <p className="text-xs text-gray-500">
             {canWithdraw
               ? "Withdraw your staked tokens. Rewards will be automatically claimed."
-              : "Tokens must be staked for at least 90 days before withdrawal."}
+              : "Tokens must be staked for at least 3 minutes before withdrawal."}
           </p>
         </div>
       )}
