@@ -1,20 +1,12 @@
 import { useAccount } from "wagmi";
-import {
-  useUserDetails,
-  usePendingRewards,
-  useTimeUntilUnlock,
-} from "./useStakingContract.js";
+import { useUserDetails, usePendingRewards } from "./useStakingContract.js";
 import {
   useTokenBalance,
   useTokenAllowance,
   useTokenSymbol,
 } from "./useTokenContract.js";
-import {
-  calculateCurrentAPR,
-  canWithdraw,
-  formatDuration,
-} from "../utils/calculations.js";
-import { formatTokenAmount, formatAPR } from "../utils/formatters.js";
+import { formatDuration } from "../utils/calculations.js";
+import { formatTokenAmount } from "../utils/formatters.js";
 
 /**
  * Hook that aggregates all user staking data
@@ -28,10 +20,11 @@ export function useUserStakingData() {
     isLoading: isLoadingDetails,
     error: detailsError,
   } = useUserDetails(address);
+
+  // Get pending rewards separately for more accurate real-time updates
   const { data: pendingRewards, isLoading: isLoadingRewards } =
     usePendingRewards(address);
-  const { data: timeUntilUnlock, isLoading: isLoadingTime } =
-    useTimeUntilUnlock(address);
+
   const { data: balance, isLoading: isLoadingBalance } =
     useTokenBalance(address);
   const { data: allowance, isLoading: isLoadingAllowance } =
@@ -40,34 +33,44 @@ export function useUserStakingData() {
 
   const isLoading =
     isLoadingDetails ||
-    isLoadingRewards ||
-    isLoadingTime ||
     isLoadingBalance ||
-    isLoadingAllowance;
+    isLoadingAllowance ||
+    isLoadingRewards;
 
-  // Process the data
+  // Process the data from userInfo: [stakedAmount, lastStakeTimestamp, rewardDebt, _]
+  // Note: We use separate getPendingRewards call for real-time rewards
   const stakingData = userDetails
     ? {
         stakedAmount: userDetails[0],
         lastStakeTimestamp: Number(userDetails[1]),
-        pendingRewards: userDetails[2],
-        timeUntilUnlock: Number(userDetails[3]),
-        canWithdraw: userDetails[4],
+        rewardDebt: userDetails[2],
+        pendingRewards: pendingRewards || BigInt(0), // Use separate pending rewards call
       }
     : null;
+
+  // Calculate canWithdraw based on lock duration (90 seconds)
+  const currentTime = Math.floor(Date.now() / 1000);
+  const lockDuration = 90; // 90 seconds
+  const canWithdraw = stakingData
+    ? currentTime >= stakingData.lastStakeTimestamp + lockDuration
+    : false;
+
+  const timeUntilUnlockSeconds = stakingData
+    ? Math.max(0, stakingData.lastStakeTimestamp + lockDuration - currentTime)
+    : 0;
 
   const formattedData = stakingData
     ? {
         stakedAmount: stakingData.stakedAmount,
         stakedAmountFormatted: formatTokenAmount(stakingData.stakedAmount),
         lastStakeTimestamp: stakingData.lastStakeTimestamp,
-        pendingRewards: pendingRewards || BigInt(0),
-        pendingRewardsFormatted: formatTokenAmount(pendingRewards || BigInt(0)),
-        timeUntilUnlock: timeUntilUnlock ? Number(timeUntilUnlock) : 0,
-        timeUntilUnlockFormatted: formatDuration(
-          timeUntilUnlock ? Number(timeUntilUnlock) : 0
+        pendingRewards: stakingData.pendingRewards || BigInt(0),
+        pendingRewardsFormatted: formatTokenAmount(
+          stakingData.pendingRewards || BigInt(0)
         ),
-        canWithdraw: stakingData.canWithdraw,
+        timeUntilUnlock: timeUntilUnlockSeconds,
+        timeUntilUnlockFormatted: formatDuration(timeUntilUnlockSeconds),
+        canWithdraw: canWithdraw,
         balance: balance || BigInt(0),
         balanceFormatted: formatTokenAmount(balance || BigInt(0)),
         allowance: allowance || BigInt(0),

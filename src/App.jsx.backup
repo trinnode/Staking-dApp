@@ -15,6 +15,7 @@ import UserPositionCard from "./components/UserPositionCard.jsx";
 import ProtocolStatsCard from "./components/ProtocolStatsCard.jsx";
 import EmergencyWithdrawCard from "./components/EmergencyWithdrawCard.jsx";
 
+
 // Styles
 import "@rainbow-me/rainbowkit/styles.css";
 
@@ -52,9 +53,19 @@ function App() {
               <RewardsCard />
             </div>
 
-            {/* Emergency Withdraw Card - Full width */}
-            <div className="lg:col-span-3">
+            {/* Emergency Withdraw Card */}
+            <div className="lg:col-span-2">
               <EmergencyWithdrawCard />
+            </div>
+
+            {/* Full width cards */}
+            <div className="lg:col-span-3">
+              <TransactionHistoryCard />
+            </div>
+
+            {/* Debug Card - Remove in production */}
+            <div className="lg:col-span-3">
+              <DebugCard />
             </div>
           </div>
         </main>

@@ -1,7 +1,7 @@
 import { useReadContract } from "wagmi";
 import { STAKING_CONTRACT_ADDRESS } from "../utils/constants.js";
 import { STAKING_ABI } from "../utils/abis.js";
-import { formatTokenAmount, formatAPR } from "../utils/formatters.js";
+import { formatTokenAmount } from "../utils/formatters.js";
 import { calculateCurrentAPR } from "../utils/calculations.js";
 
 /**
@@ -42,15 +42,15 @@ export function useProtocolStats() {
 
   const isLoading = isLoadingTotal || isLoadingRate || isLoadingRewards;
 
-  // Calculate dynamic APR
+  // Calculate dynamic APR (returns a number, not BigInt)
   const dynamicAPR = totalStaked ? calculateCurrentAPR(totalStaked) : 250;
 
   const formattedStats = {
     totalStaked: totalStaked || BigInt(0),
     totalStakedFormatted: formatTokenAmount(totalStaked || BigInt(0)),
     currentRewardRate: currentRewardRate || BigInt(0),
-    currentAPR: dynamicAPR,
-    currentAPRFormatted: formatAPR(BigInt(dynamicAPR)),
+    currentAPR: dynamicAPR, // Keep as number
+    currentAPRFormatted: `${dynamicAPR.toFixed(2)}%`, // Format as string instead of using formatAPR
     totalRewards: totalRewards || BigInt(0),
     totalRewardsFormatted: formatTokenAmount(totalRewards || BigInt(0)),
   };

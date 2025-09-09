@@ -80,7 +80,7 @@ export function useUserDetails(address) {
   return useReadContract({
     address: STAKING_CONTRACT_ADDRESS,
     abi: STAKING_ABI,
-    functionName: "getUserDetails",
+    functionName: "userInfo",
     args: address ? [address] : undefined,
     query: {
       enabled: !!address,

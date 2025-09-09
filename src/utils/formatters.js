@@ -105,3 +105,17 @@ export function formatTimestamp(timestamp) {
   const date = new Date(timestamp);
   return date.toLocaleString();
 }
+
+/**
+ * Format a number with commas for better readability
+ * @param {number} num - Number to format
+ * @param {number} decimals - Number of decimal places (default 2)
+ * @returns {string} Formatted number string
+ */
+export function formatNumber(num, decimals = 2) {
+  if (!num || num === 0) return "0";
+  return Number(num).toLocaleString("en-US", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: decimals,
+  });
+}

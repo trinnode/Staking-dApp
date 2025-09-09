@@ -87,6 +87,15 @@ const RewardsCard = () => {
           <div className="text-sm text-green-600 font-medium">
             {userData?.tokenSymbol || "TOKEN"} Rewards
           </div>
+          {/* Debug information */}
+          <div className="mt-2 text-xs text-gray-500 space-y-1">
+            <div>
+              Raw Rewards: {userData?.pendingRewards?.toString() || "0"}
+            </div>
+            <div>Last Update: {new Date().toLocaleTimeString()}</div>
+            <div>Has Stake: {hasStake ? "Yes" : "No"}</div>
+            <div>Staked Amount: {userData?.stakedAmountFormatted || "0"}</div>
+          </div>
         </div>
 
         {/* Claim Button */}
